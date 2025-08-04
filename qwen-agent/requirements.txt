@@ -1,5 +1,7 @@
-fastapi
-uvicorn
-transformers
-torch
-Appium-Python-Client
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+transformers>=4.35.0
+torch>=2.1.0
+Appium-Python-Client>=3.0.0
+pydantic>=2.0.0
+httpx  # для HTTP запитів між сервісами
