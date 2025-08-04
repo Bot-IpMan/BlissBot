@@ -6,49 +6,31 @@ echo "=== Запуск Appium сервера ==="
 # Показати версію Appium та встановлені драйвери
 echo "Версія Appium: $(appium --version)"
 echo "Встановлені драйвери:"
-appium driver list --installed
+appium driver list --installed 2>/dev/null || echo "Не вдалося отримати список драйверів"
 
-# Перевірка підключення до емулятора
+# Перевірка підключення до емулятора (опціонально)
 if [ -n "$ANDROID_EMULATOR_HOST" ] && [ -n "$ANDROID_EMULATOR_PORT" ]; then
-    echo "Спроба підключення до Android емулятора: $ANDROID_EMULATOR_HOST:$ANDROID_EMULATOR_PORT"
+    echo "Перевірка доступності емулятора: $ANDROID_EMULATOR_HOST:$ANDROID_EMULATOR_PORT"
     
-    # Спроба підключення через ADB з обмеженим таймаутом
-    timeout=30
-    counter=0
-    connected=false
-    
-    while [ $counter -lt $timeout ]; do
-        echo "Спроба підключення ADB... ($((counter + 1))/$timeout)"
-        
-        if timeout 5 adb connect "$ANDROID_EMULATOR_HOST:$ANDROID_EMULATOR_PORT" 2>/dev/null | grep -q "connected"; then
-            echo "✅ Успішно підключено до емулятора"
-            connected=true
-            break
-        fi
-        
-        counter=$((counter + 1))
-        sleep 2
-    done
-    
-    if [ "$connected" = false ]; then
-        echo "⚠️ ПОПЕРЕДЖЕННЯ: Не вдалося підключитися до емулятора за $timeout секунд"
-        echo "Appium сервер запуститься без підключення до пристрою"
+    # Простіша перевірка доступності без ADB підключення
+    if timeout 5 nc -z "$ANDROID_EMULATOR_HOST" "$ANDROID_EMULATOR_PORT" 2>/dev/null; then
+        echo "✅ Емулятор доступний за адресою $ANDROID_EMULATOR_HOST:$ANDROID_EMULATOR_PORT"
+    else
+        echo "⚠️ Емулятор може бути недоступний"
     fi
-    
-    # Показати підключені пристрої
-    echo "Підключені Android пристрої:"
-    adb devices
 else
-    echo "⚠️ ANDROID_EMULATOR_HOST або ANDROID_EMULATOR_PORT не встановлені"
-    echo "Встановіть змінні середовища для автоматичного підключення"
+    echo "💡 Для автоматичної перевірки емулятора встановіть ANDROID_EMULATOR_HOST та ANDROID_EMULATOR_PORT"
 fi
 
 echo ""
 echo "🚀 Запуск Appium сервера на порт 4723..."
-echo "Конфігурація: /opt/appium/appium.conf.js"
 
-# Запуск Appium з додатковими параметрами
+# Запуск Appium сервера
 exec appium server \
-    --config /opt/appium/appium.conf.js \
+    --address 0.0.0.0 \
+    --port 4723 \
+    --log-level info \
     --log-timestamp \
-    --local-timezone
+    --local-timezone \
+    --allow-insecure adb_shell \
+    --relaxed-security
