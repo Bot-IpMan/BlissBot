@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  qwen-agent:
+    build: ./qwen-agent
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shared:/app/shared
+    depends_on:
+      - appium
+  appium:
+    build: ./appium-server
+    ports:
+      - "4723:4723"
+    volumes:
+      - ./logs:/opt/appium/logs
+      - ./screenshots:/opt/appium/screenshots
+      - ./apks:/opt/appium/apks
