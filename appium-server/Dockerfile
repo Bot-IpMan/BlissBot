@@ -7,9 +7,12 @@ RUN apk add --no-cache \
     curl \
     bash
 
-# Встановлення Appium та драйверів
+# Встановлення Appium
 RUN npm install -g appium@2.4.1
-RUN appium driver install uiautomator2@2.34.0
+
+# Встановлення UiAutomator2 драйвера з пропуском Chromedriver
+ENV APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
+RUN appium driver install uiautomator2
 
 # Перевірка встановлених драйверів
 RUN appium driver list --installed
