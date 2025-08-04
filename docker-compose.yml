@@ -1,4 +1,3 @@
-# Видалено застарілу директиву version
 services:
   qwen-agent:
     build: ./qwen-agent
@@ -14,7 +13,7 @@ services:
     deploy:
       resources:
         reservations:
-          memory: 4G  # Зменшено для 1.5B моделі
+          memory: 4G
     depends_on:
       appium:
         condition: service_healthy
@@ -24,7 +23,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 120s  # Більше часу для завантаження моделі
+      start_period: 120s
 
   appium:
     build: ./appium-server
@@ -38,6 +37,12 @@ services:
       - ANDROID_EMULATOR_HOST=${ANDROID_EMULATOR_HOST:-172.26.209.4}
       - ANDROID_EMULATOR_PORT=${ANDROID_EMULATOR_PORT:-5555}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4723/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
 volumes:
   model_cache:
