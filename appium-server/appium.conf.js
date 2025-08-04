@@ -1,7 +1,5 @@
-// Configuration for the Appium server itself. This does **not** set the
-// address of the Android emulator; instead it defines how clients reach the
-// Appium service. The emulator/device must be connected separately via ADB
-// (default port 5555).
+// Виправлена конфігурація для Appium 2.x
+// Видалено секцію "appium" яка не підтримується в новій версії
 module.exports = {
   server: {
     // Default Appium HTTP port. ADB connections use a different port (5555).
@@ -9,9 +7,11 @@ module.exports = {
     // Listen on all network interfaces so containers or remote clients can
     // reach the server regardless of their IP.
     address: '0.0.0.0',
-  },
-  // Appium-specific options such as log verbosity.
-  appium: {
-    logLevel: 'info'
+    // Логування тепер налаштовується через CLI аргументи
+    'log-level': 'info',
+    // Дозволити небезпечні функції для автоматизації
+    'allow-insecure': ['adb_shell'],
+    // Релакс безпеки для контейнерного середовища
+    'relaxed-security': true
   }
 };
