@@ -41,9 +41,20 @@
 1. Переконайтеся, що Android‑емулятор працює та доступний зсередини контейнера Appium (наприклад, виконайте `adb connect <IP>:5555` після запуску контейнера).
 2. Запустіть стек:
 
+This project provides a Docker Compose setup for a local server that ties together:
+
+- **qwen-agent**: a FastAPI service powered by the `Qwen/Qwen2.5-Coder-7B-Instruct` model.
+- **appium**: an Appium server used to drive Android emulators or devices.
+
+The Android emulator should run on Hyper-V with BlissOS 16.9.7 and be reachable by the Appium server.
+
+## Usage
+
+
 ```bash
 docker compose up --build
 ```
+
 
 Після успішного старту:
 
@@ -99,3 +110,10 @@ docker compose down --volumes --rmi all
 
 Ласкаво просимо до внеску та пропозицій!
 
+=======
+After the services start:
+
+- Qwen agent listens on `http://localhost:8000`.
+- Appium server listens on `http://localhost:4723`.
+
+Shared folders (`shared`, `logs`, `screenshots`, `apks`) are mounted inside the containers for data exchange.
