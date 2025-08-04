@@ -34,7 +34,7 @@ services:
       - ./screenshots:/opt/appium/screenshots
       - ./apks:/opt/appium/apks
     environment:
-      - ANDROID_EMULATOR_HOST=${ANDROID_EMULATOR_HOST:-172.26.209.4}
+      - ANDROID_EMULATOR_HOST=${ANDROID_EMULATOR_HOST:-192.168.1.218}
       - ANDROID_EMULATOR_PORT=${ANDROID_EMULATOR_PORT:-5555}
     restart: unless-stopped
     healthcheck:

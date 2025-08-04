@@ -16,8 +16,8 @@ app = FastAPI(title="Qwen Agent", description="AI-powered Android automation age
 _model_pipeline = None
 _model_loaded = False
 
-# Використовуємо легшу модель для тестування
-MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"  # Замість 7B використовуємо 1.5B
+# Використовуємо модель Qwen2.5-Coder-7B-Instruct
+MODEL_NAME = "Qwen2.5-Coder-7B-Instruct"
 
 class Prompt(BaseModel):
     prompt: str
