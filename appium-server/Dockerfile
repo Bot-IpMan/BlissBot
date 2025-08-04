@@ -1,39 +1,23 @@
-FROM node:18-alpine
+# Використовуємо офіційний образ Appium
+FROM appium/appium:v2.4.1-p0
 
-# Встановлення системних залежностей
-RUN apk add --no-cache \
-    android-tools \
-    openjdk11-jre \
+# Встановлення додаткових інструментів
+USER root
+RUN apt-get update && apt-get install -y \
     curl \
-    bash \
-    wget
+    && rm -rf /var/lib/apt/lists/*
 
-# Встановлення Appium
-RUN npm install -g appium@2.4.1
+# Повертаємося до користувача appium
+USER appium
 
-# Налаштування змінних середовища для пропуску завантажень
-ENV APPIUM_SKIP_CHROMEDRIVER_INSTALL=1
-ENV npm_config_timeout=300000
-ENV npm_config_registry=https://registry.npmjs.org/
-
-# Встановлення UiAutomator2 драйвера з розширеним таймаутом
-RUN npm config set timeout 300000 && \
-    npm config set registry https://registry.npmjs.org/ && \
-    appium driver install uiautomator2 || \
-    (echo "Спроба 2..." && sleep 5 && appium driver install uiautomator2) || \
-    (echo "Спроба 3 з пропуском всіх завантажень..." && \
-     APPIUM_SKIP_CHROMEDRIVER_INSTALL=1 \
-     npm_config_timeout=600000 \
-     appium driver install uiautomator2)
-
-# Перевірка встановлених драйверів
-RUN appium driver list --installed || echo "Драйвери не встановлені, але продовжуємо..."
+# Встановлення UiAutomator2 драйвера (він може бути вже встановлений)
+RUN appium driver list --installed || appium driver install uiautomator2 || echo "Драйвер вже встановлений"
 
 WORKDIR /opt/appium
 
 # Копіювання конфігурації
-COPY appium.conf.js .
-COPY start.sh .
+COPY --chown=appium:appium appium.conf.js .
+COPY --chown=appium:appium start.sh .
 RUN chmod +x start.sh
 
 # Створення необхідних директорій
@@ -42,7 +26,7 @@ RUN mkdir -p /opt/appium/logs /opt/appium/screenshots /opt/appium/apks
 EXPOSE 4723
 
 # Healthcheck для контейнера
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:4723/wd/hub/status || exit 1
 
 ENTRYPOINT ["/opt/appium/start.sh"]
