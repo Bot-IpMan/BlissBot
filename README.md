@@ -14,8 +14,8 @@
 ## Вимоги
 
 - встановлені Docker і Docker Compose;
-- щонайменше 16 ГБ оперативної памʼяті для моделі 7B;
-- Android‑емулятор, запущений на Hyper‑V з BlissOS 16.9.7 і доступний у мережі (наприклад, `192.168.1.10:5555`);
+- щонайменше 16 ГБ оперативної памʼяті для моделі 7B;
+- Android‑емулятор, запущений на Hyper‑V з BlissOS 16.9.7 і доступний у мережі (наприклад, `192.168.1.10:5555`);
 - доступ до Інтернету при першому старті для завантаження моделі.
 
 ## Структура проєкту
@@ -38,23 +38,16 @@
 
 ## Запуск
 
-1. Переконайтеся, що Android‑емулятор працює та доступний зсередини контейнера Appium (наприклад, виконайте `adb connect <IP>:5555` після запуску контейнера).
+1. Переконайтеся, що Android‑емулятор працює та доступний зсередини контейнера Appium. Емулятор/пристрій підʼєднується через ADB на порт `5555`, наприклад:
+   ```bash
+   adb connect <IP>:5555
+   ```
+   Це підключення не залежить від порту Appium; сервер Appium слухає на `0.0.0.0:4723` лише для клієнтів Appium.
 2. Запустіть стек:
-
-This project provides a Docker Compose setup for a local server that ties together:
-
-- **qwen-agent**: a FastAPI service powered by the `Qwen/Qwen2.5-Coder-7B-Instruct` model.
-- **appium**: an Appium server used to drive Android emulators or devices.
-
-The Android emulator should run on Hyper-V with BlissOS 16.9.7 and be reachable by the Appium server.
-
-## Usage
-
 
 ```bash
 docker compose up --build
 ```
-
 
 Після успішного старту:
 
@@ -109,11 +102,3 @@ docker compose down --volumes --rmi all
 - адаптуйте конфігурацію Appium під конкретні пристрої та драйвери.
 
 Ласкаво просимо до внеску та пропозицій!
-
-=======
-After the services start:
-
-- Qwen agent listens on `http://localhost:8000`.
-- Appium server listens on `http://localhost:4723`.
-
-Shared folders (`shared`, `logs`, `screenshots`, `apks`) are mounted inside the containers for data exchange.
