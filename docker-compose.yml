@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
   qwen-agent:
     build: ./qwen-agent
@@ -6,8 +7,19 @@ services:
       - "8000:8000"
     volumes:
       - ./shared:/app/shared
+      - model_cache:/root/.cache/huggingface  # Кешування моделі
+    environment:
+      - TRANSFORMERS_CACHE=/root/.cache/huggingface
+      - HF_HOME=/root/.cache/huggingface
     depends_on:
       - appium
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   appium:
     build: ./appium-server
     ports:
@@ -16,3 +28,15 @@ services:
       - ./logs:/opt/appium/logs
       - ./screenshots:/opt/appium/screenshots
       - ./apks:/opt/appium/apks
+    environment:
+      - ANDROID_EMULATOR_HOST=${ANDROID_EMULATOR_HOST:-192.168.1.10}
+      - ANDROID_EMULATOR_PORT=${ANDROID_EMULATOR_PORT:-5555}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4723/wd/hub/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  model_cache:  # Персистентний том для кешування моделі
