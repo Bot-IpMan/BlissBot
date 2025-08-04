@@ -4,8 +4,8 @@ FROM node:18-slim
 # Встановлення системних залежностей
 RUN apt-get update && apt-get install -y \
     curl \
-    netcat-traditional \
-    openjdk-11-jdk \
+    netcat-openbsd \
+    openjdk-17-jdk \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлення Appium та драйвера
