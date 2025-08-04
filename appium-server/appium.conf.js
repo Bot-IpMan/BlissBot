@@ -9,7 +9,9 @@ module.exports = {
     // Listen on all network interfaces so containers or remote clients can
     // reach the server regardless of their IP.
     address: '0.0.0.0',
-    // Log verbosity for easier debugging.
+  },
+  // Appium-specific options such as log verbosity.
+  appium: {
     logLevel: 'info'
   }
 };
