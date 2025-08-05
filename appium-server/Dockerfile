@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     netcat-openbsd \
     openjdk-17-jdk \
+    android-tools-adb \
+    iputils-ping \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлення Appium та драйвера

@@ -16,8 +16,10 @@ app = FastAPI(title="Qwen Agent", description="AI-powered Android automation age
 _model_pipeline = None
 _model_loaded = False
 
-# Використовуємо модель Qwen2.5-Coder-7B-Instruct
-MODEL_NAME = "Qwen2.5-Coder-7B-Instruct"
+# Використовуємо модель Qwen2.5-Coder-7B-Instruct.
+# Шлях до моделі можна задати через змінну оточення MODEL_PATH.
+# За замовчуванням використовується репозиторій з HuggingFace.
+MODEL_NAME = os.getenv("MODEL_PATH", "Qwen/Qwen2.5-Coder-7B-Instruct")
 
 class Prompt(BaseModel):
     prompt: str

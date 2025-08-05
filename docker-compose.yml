@@ -6,10 +6,12 @@ services:
     volumes:
       - ./shared:/app/shared
       - model_cache:/root/.cache/huggingface
+      - /mnt/e/models/Qwen2.5-Coder-7B-Instruct:/models/Qwen2.5-Coder-7B-Instruct
     environment:
       - HF_HOME=/root/.cache/huggingface
       - TRANSFORMERS_CACHE=/root/.cache/huggingface
       - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      - MODEL_PATH=/models/Qwen2.5-Coder-7B-Instruct
     deploy:
       resources:
         reservations:
