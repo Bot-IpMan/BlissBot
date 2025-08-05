@@ -9,6 +9,11 @@
 - **qwen-agent** – FastAPI‑сервіс, який завантажує модель [`Qwen/Qwen2.5-Coder-7B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct) і надає HTTP‑інтерфейс `/generate` для створення тексту або сценаріїв.
 - **appium** – сервер [Appium](https://appium.io), через який агент взаємодіє з Android‑емулятором чи фізичним пристроєм.
 
+За потреби шлях до моделі можна визначити через змінну оточення `MODEL_PATH`.
+У `docker-compose.yml` вона вказує на змонтовану директорію
+`/models/Qwen2.5-Coder-7B-Instruct`, що відповідає локальному шляху на хості
+`/mnt/e/models/Qwen2.5-Coder-7B-Instruct`.
+
 Обидва контейнері звʼязуються між собою та спільними папками для логів, скріншотів та APK‑файлів.
 
 ## Вимоги
