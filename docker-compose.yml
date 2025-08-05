@@ -44,5 +44,20 @@ services:
       retries: 5
       start_period: 60s
 
+  # Тестовий контейнер для перевірки Appium підключення
+  test-runner:
+    build: ./test-runner
+    volumes:
+      - ./screenshots:/app/screenshots
+    environment:
+      - APPIUM_URL=http://appium:4723
+      - EMULATOR_HOST=${ANDROID_EMULATOR_HOST:-192.168.1.218}
+    depends_on:
+      appium:
+        condition: service_healthy
+    profiles:
+      - testing
+    network_mode: service:appium
+
 volumes:
   model_cache:
